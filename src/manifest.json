@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "Amazon Order Tracker",
+  "version": "1.0",
+  "description": "Track and analyze your Amazon orders with advanced features",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://www.amazon.ca/*",
+    "https://www.amazon.ca/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.amazon.ca/*", 
+                  "https://www.amazon.com/*", 
+                  "https://www.amazon.ca/gp/css/order-history?ref_=hp_ss_qs_v3_dg_dp&unifiedOrders=0",
+                  "https://www.amazon.com/gp/your-account/order-history*",
+                  "https://www.amazon.com/gp/css/order-history*"
+                ],
+      "js": ["content.js"]
+    }
+  ]
+}
