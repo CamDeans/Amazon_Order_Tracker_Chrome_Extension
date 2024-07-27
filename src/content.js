@@ -4,15 +4,15 @@ let orders = [];
 
 function scrapeOrders() {
   orders = [];
-  const orderElements = document.querySelectorAll('.order-card.js-order-card'); // General selector to target order cards
+  const orderElements = document.querySelectorAll('.order-card.js-order-card');
 
   console.log(`Found ${orderElements.length} order elements`);
 
   orderElements.forEach(orderElement => {
-    const dateElement = orderElement.querySelector('.a-column.a-span3 .a-row .a-size-base.a-color-secondary'); // Selector for order date
-    const totalElement = orderElement.querySelector('.a-column.a-span2 .a-row .a-size-base.a-color-secondary'); // Selector for total amount
-    const invoiceElement = orderElement.querySelector('span.a-color-secondary[dir="ltr"]'); // Selector for invoice number
-    const itemElements = orderElement.querySelectorAll('.yohtmlc-product-title'); // Selector for items
+    const dateElement = orderElement.querySelector('.a-column.a-span3 .a-row .a-size-base.a-color-secondary');
+    const totalElement = orderElement.querySelector('.a-column.a-span2 .a-row .a-size-base.a-color-secondary');
+    const invoiceElement = orderElement.querySelector('span.a-color-secondary[dir="ltr"]');
+    const itemElements = orderElement.querySelectorAll('.yohtmlc-product-title');
 
     console.log({
       dateElement: dateElement ? dateElement.textContent.trim() : 'Not found',
@@ -40,26 +40,39 @@ function scrapeOrders() {
   });
 
   console.log('Orders scraped:', orders);
-  chrome.runtime.sendMessage({ action: "updateOrders", orders: orders });
 }
 
 function observePageChanges() {
   const targetNode = document.body;
   const config = { childList: true, subtree: true };
+
   const callback = function(mutationsList, observer) {
     for (let mutation of mutationsList) {
       if (mutation.type === 'childList') {
-        scrapeOrders();
+        try {
+          scrapeOrders();
+        } catch (error) {
+          console.error('Error during scraping:', error);
+        }
         break;
       }
     }
   };
+
   const observer = new MutationObserver(callback);
   observer.observe(targetNode, config);
+
+  window.addEventListener('beforeunload', () => {
+    observer.disconnect();
+    console.log('Observer disconnected.');
+  });
 }
 
-scrapeOrders();
-observePageChanges();
+document.addEventListener('DOMContentLoaded', (event) => {
+  console.log('DOM fully loaded and parsed');
+  scrapeOrders();
+  observePageChanges();
+});
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('Message received in content script:', request);

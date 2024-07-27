@@ -11,9 +11,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   if (request.action === "exportData") {
     console.log('Export data request received');
-    if (!request.data) {
-      console.error('No data received for export');
-      sendResponse({ success: false, error: 'No data received for export' });
+    console.log('Request data:', request.data);
+    if (!Array.isArray(request.data)) {
+      console.error('No data received for export or data is not an array');
+      sendResponse({ success: false, error: 'No data received for export or data is not an array' });
       return true;
     }
 
@@ -28,8 +29,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        console.log('Blob read as data URL:', reader.result);
-        sendResponse({ success: true, url: reader.result });
+        const url = reader.result;
+        console.log('Blob read as data URL:', url);
+
+        chrome.downloads.download({
+          url: url,
+          filename: 'amazon_orders.csv',
+          saveAs: true
+        }, (downloadId) => {
+          if (chrome.runtime.lastError) {
+            console.error('Download error:', chrome.runtime.lastError);
+            sendResponse({ success: false, error: chrome.runtime.lastError.message });
+          } else {
+            console.log('Download started with id:', downloadId);
+            sendResponse({ success: true, downloadId: downloadId });
+          }
+        });
       };
       reader.onerror = (error) => {
         console.error('Error reading blob:', error);

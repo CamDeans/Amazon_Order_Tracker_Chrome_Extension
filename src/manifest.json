@@ -11,7 +11,7 @@
   ],
   "host_permissions": [
     "https://www.amazon.ca/*",
-    "https://www.amazon.ca/*"
+    "https://www.amazon.com/*"
   ],
   "background": {
     "service_worker": "background.js"
