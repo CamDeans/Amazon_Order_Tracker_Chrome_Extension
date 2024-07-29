@@ -7,14 +7,15 @@
     "storage",
     "activeTab",
     "scripting",
-    "downloads"
+    "downloads",
+    "webNavigation" 
   ],
   "host_permissions": [
-    "https://www.amazon.ca/*",
-    "https://www.amazon.com/*"
+    "https://www.amazon.ca/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "action": {
     "default_popup": "popup.html",
@@ -31,11 +32,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.amazon.ca/*", 
-                  "https://www.amazon.com/*", 
-                  "https://www.amazon.ca/gp/css/order-history?ref_=hp_ss_qs_v3_dg_dp&unifiedOrders=0",
-                  "https://www.amazon.com/gp/your-account/order-history*",
-                  "https://www.amazon.com/gp/css/order-history*"
+      "matches": ["https://www.amazon.ca/*"
                 ],
       "js": ["content.js"]
     }
