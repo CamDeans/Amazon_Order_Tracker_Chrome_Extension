@@ -1,21 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Amazon Order Tracker</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Amazon Order Exporter</title>
+  <style>
+    body { width: 300px; padding: 10px; }
+    button { margin-bottom: 10px; width: 100%; }
+    #status { margin-bottom: 10px; }
+    #log { 
+      height: 200px; 
+      overflow-y: auto; 
+      border: 1px solid #ccc; 
+      padding: 5px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 p-4 w-96">
-  <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-    <h1 class="text-2xl font-bold mb-4 text-center text-blue-600">Amazon Order Tracker</h1>
-    <div id="orderSummary" class="mb-4"></div>
-    <canvas id="spendingChart" class="mb-4"></canvas>
-    <div id="categoryBreakdown" class="mb-4"></div>
-    <button id="exportData" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
-      Export Data
-    </button>
-  </div>
+<body>
+  <button id="exportData">Export Data</button>
+  <div id="status"></div>
+  <div id="log"></div>
   <script src="popup.js"></script>
 </body>
 </html>
